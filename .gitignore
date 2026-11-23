@@ -1,0 +1,11 @@
+# compiled binaries (rebuild with `make`)
+/lockbench
+/barrierbench
+/calibrate
+/*-tsan
+*.o
+# LaTeX intermediates
+paper/*.aux
+paper/*.log
+paper/*.out
+__pycache__/

@@ -1,0 +1,229 @@
+Uncontended latency (ns, ratio vs tas_backoff):
+TAS (no backoff) & 10.9 & 1.04\\
+TTAS (no backoff) & 10.3 & 0.99\\
+TAS + exp. backoff (Alg. 1) & 10.5 & 1.00\\
+Ticket + prop. backoff (Alg. 2) & 9.0 & 0.86\\
+Anderson array (Alg. 3) & 10.5 & 1.01\\
+Anderson, unpadded & 11.0 & 1.06\\
+MCS (Alg. 5) & 17.5 & 1.68\\
+MCS swap-only (Alg. 6) & 16.3 & 1.56\\
+MCS-SP (ours) & 16.9 & 1.62\\
+MCS-SPW (ours, +wake-ahead) & 17.4 & 1.67\\
+pthread_mutex (glibc) & 18.6 & 1.78\\
+
+E1 at 12 threads:
+               mops   jain         ns
+lock                                 
+anderson      0.037  0.972  26737.968
+anderson_np   0.043  0.843  23255.814
+mcs           0.061  0.834  16474.465
+mcs_sp        0.106  0.986   9478.673
+mcs_spw       0.667  1.000   1499.250
+mcs_swap      0.770  1.000   1299.545
+pthread       6.025  0.999    165.978
+tas           2.467  0.601    405.301
+tas_backoff  31.436  0.937     31.810
+ticket        0.636  1.000   1573.069
+ttas          6.119  0.676    163.423
+
+E3 oversubscription:
+                       mops    jain  cpu_s_per_mop   min_ops
+threads lock                                                
+6       anderson     4.6530  0.9913           1.28  726935.0
+        mcs          5.8897  0.9868           1.02  886335.0
+        mcs_sp       5.4304  0.9942           1.09  858179.0
+        mcs_spw      3.8341  0.9992           1.46  617001.0
+        pthread      2.7297  0.9924           1.85  395912.0
+        tas_backoff  4.8159  0.9944           1.23  711850.0
+        ticket       5.3670  0.9847           1.11  804054.0
+12      anderson     0.0102  0.7836        1018.19     216.0
+        mcs          0.8928  0.9954          12.27   48994.0
+        mcs_sp       0.1820  0.9996          22.07   14807.0
+        mcs_spw      1.3782  1.0000           3.72  113410.0
+        pthread      2.4995  0.9996           3.31  197704.0
+        tas_backoff  3.9025  0.9293           2.66  202511.0
+        ticket       1.7164  0.9962           6.39  133105.0
+24      anderson     0.0110  0.4452         967.23      16.0
+        mcs          0.0118  0.4500         949.79      18.0
+        mcs_sp       0.1031  0.9953          38.38    4167.0
+        mcs_spw      0.0598  0.9983          46.48    2299.0
+        pthread      2.4593  0.9992           3.89   96083.0
+        tas_backoff  2.1940  0.7909           4.60   34021.0
+        ticket       0.0054  0.4746        1976.21      14.0
+48      anderson     0.0052  0.2254        2124.50       2.0
+        mcs          0.0038  0.2508        2845.64       1.0
+        mcs_sp       0.1108  0.9948          41.02    2213.0
+        mcs_spw      0.0801  0.9880          51.68    1576.0
+        pthread      2.5367  0.9983           3.90   49466.0
+        tas_backoff  1.4088  0.4556           8.39    2638.0
+        ticket       0.0041  0.2576        2485.97       2.0
+
+E2:
+                      mops   jain
+threads lock                     
+1       anderson     3.271  1.000
+        mcs          3.557  1.000
+        mcs_sp       3.399  1.000
+        mcs_spw      3.386  1.000
+        pthread      3.413  1.000
+        tas_backoff  3.285  1.000
+        ticket       2.791  1.000
+        ttas         3.040  1.000
+2       anderson     5.533  0.999
+        mcs          6.368  0.998
+        mcs_sp       7.919  1.000
+        mcs_spw      7.902  1.000
+        pthread      3.834  0.910
+        tas_backoff  4.946  0.966
+        ticket       5.898  0.995
+        ttas         5.242  0.921
+4       anderson     5.597  0.959
+        mcs          5.261  0.969
+        mcs_sp       5.012  0.990
+        mcs_spw      4.560  0.991
+        pthread      4.029  0.997
+        tas_backoff  5.734  0.973
+        ticket       6.530  0.968
+        ttas         4.746  0.936
+6       anderson     4.525  0.987
+        mcs          5.441  0.990
+        mcs_sp       5.281  0.994
+        mcs_spw      5.045  0.990
+        pthread      3.197  0.988
+        tas_backoff  5.427  0.989
+        ticket       5.937  0.982
+        ttas         3.356  0.779
+8       anderson     5.080  0.995
+        mcs          5.874  0.996
+        mcs_sp       5.450  0.999
+        mcs_spw      5.257  0.999
+        pthread      2.772  0.991
+        tas_backoff  4.757  0.957
+        ticket       5.307  0.996
+        ttas         2.961  0.659
+10      anderson     4.897  0.998
+        mcs          2.631  0.998
+        mcs_sp       4.632  1.000
+        mcs_spw      4.626  1.000
+        pthread      2.527  0.998
+        tas_backoff  4.384  0.917
+        ticket       3.556  0.997
+        ttas         2.652  0.649
+12      anderson     0.604  0.995
+        mcs          0.052  0.888
+        mcs_sp       0.087  0.997
+        mcs_spw      0.527  1.000
+        pthread      2.451  0.999
+        tas_backoff  4.381  0.901
+        ticket       0.027  0.750
+        ttas         2.496  0.703
+
+E4:
+lock     threads  spin_limit
+mcs_sp   8        0             0.153
+                  16            0.150
+                  64            0.243
+                  256           0.251
+                  1024          6.199
+                  4096          5.852
+                  16384         5.750
+                  65536         5.749
+         24       0             0.153
+                  16            0.181
+                  64            0.222
+                  256           0.228
+                  1024          0.120
+                  4096          0.060
+                  16384         0.060
+                  65536         0.019
+mcs_spw  8        0             0.232
+                  16            0.315
+                  64            0.453
+                  256           1.333
+                  1024          5.161
+                  4096          5.200
+                  16384         5.141
+                  65536         5.104
+         24       0             0.183
+                  16            0.274
+                  64            0.419
+                  256           0.399
+                  1024          0.072
+                  4096          0.061
+                  16384         0.032
+                  65536         0.018
+
+E7:
+                     mops   jain  cpu_s_per_mop
+threads wake_depth                             
+8       0           5.647  0.999           1.36
+        1           5.287  0.997           1.45
+        2           4.135  1.000           1.69
+        3           5.187  1.000           1.52
+        4           4.920  1.000           1.61
+        8           3.910  1.000           2.04
+12      0           0.365  1.000          13.17
+        1           0.271  0.999          17.59
+        2           0.069  0.998          31.08
+        3           2.112  1.000           3.08
+        4           2.881  1.000           2.88
+        8           2.648  1.000           3.15
+24      0           0.106  0.972          38.22
+        1           0.102  0.984          36.23
+        2           0.055  0.939          44.77
+        3           0.064  0.927          43.88
+        4           0.063  0.943          43.72
+        8           0.044  0.938          66.08
+48      0           0.148  0.962          32.20
+        1           0.106  0.978          37.16
+        2           0.076  0.968          54.35
+        3           0.083  0.952          52.37
+        4           0.080  0.967          53.77
+        8           0.059  0.854          69.18
+
+E5:
+threads  barrier   
+2        central         0.16
+         central_sp      0.13
+         dissem          0.11
+         mcs_tree        0.23
+         pthread         2.80
+4        central         0.30
+         central_sp      0.31
+         dissem          0.24
+         mcs_tree        0.44
+         pthread         3.50
+6        central         0.42
+         central_sp      0.44
+         dissem          0.35
+         mcs_tree        0.65
+         pthread         5.08
+8        central         0.63
+         central_sp      0.78
+         dissem          0.43
+         mcs_tree        1.00
+         pthread         6.69
+10       central         1.40
+         central_sp      1.36
+         dissem          1.01
+         mcs_tree        7.33
+         pthread         9.96
+12       central        18.74
+         central_sp      1.20
+         dissem          0.65
+         mcs_tree        2.13
+         pthread       123.37
+
+E6:
+                    us_per_episode  cpu_s
+threads barrier                          
+16      central             4863.5   16.3
+        central_sp           252.1    0.6
+        dissem              7712.9   24.9
+        mcs_tree            7807.0   27.0
+        pthread               66.9    0.0
+24      central            14637.9   49.0
+        central_sp           353.3    0.9
+        dissem             23175.3   77.7
+        mcs_tree           22195.2   75.0
+        pthread               89.4    0.0

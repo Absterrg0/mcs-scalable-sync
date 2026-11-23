@@ -1,0 +1,11 @@
+TAS (no backoff) & 10.9 & 1.04\\
+TTAS (no backoff) & 10.3 & 0.99\\
+TAS + exp. backoff (Alg. 1) & 10.5 & 1.00\\
+Ticket + prop. backoff (Alg. 2) & 9.0 & 0.86\\
+Anderson array (Alg. 3) & 10.5 & 1.01\\
+Anderson, unpadded & 11.0 & 1.06\\
+MCS (Alg. 5) & 17.5 & 1.68\\
+MCS swap-only (Alg. 6) & 16.3 & 1.56\\
+MCS-SP (ours) & 16.9 & 1.62\\
+MCS-SPW (ours, +wake-ahead) & 17.4 & 1.67\\
+pthread_mutex (glibc) & 18.6 & 1.78\\
